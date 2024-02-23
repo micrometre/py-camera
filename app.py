@@ -1,5 +1,5 @@
 # Import necessary modules
-from flask import Flask, render_template, Response, request, jsonify, redirect, url_for
+from flask import Flask, render_template, Response, request, jsonify, redirect, url_for, send_file
 from aiortc import RTCPeerConnection, RTCSessionDescription
 import cv2
 
@@ -13,15 +13,15 @@ app = Flask(__name__, static_url_path='/static')
 def gen_frames():  # generate frame by frame from camera
     camera = cv2.VideoCapture(0)
     fourcc = cv2.VideoWriter_fourcc(*'XVID')
-    out = cv2.VideoWriter('tmp/output.avi', fourcc, 20.0, (640,  480))
+    out = cv2.VideoWriter('output.avi', fourcc, 20.0, (640,  480))
     while True:
         # Capture frame-by-frame
-        success, frame = camera.read()  # read the camera frame
+        #success, frame = camera.read()  # read the camera frame
         ret, frame = camera.read()
+        out.write(frame)
         if not ret:
             break
         else:
-            out.write(frame)
             ret, buffer = cv2.imencode('.jpg', frame)
             frame = buffer.tobytes()
             print(type(frame))
@@ -32,7 +32,9 @@ def gen_frames():  # generate frame by frame from camera
 @app.route('/video_feed')
 def video_feed():
     return Response(gen_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
-
+@app.route("/video")
+def video():
+    return send_file("./tmp/alprVideo.mp4")
 # Run the Flask app
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0')
