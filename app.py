@@ -13,7 +13,7 @@ app = Flask(__name__, static_url_path='/static')
 def gen_frames():  # generate frame by frame from camera
     camera = cv2.VideoCapture(0)
     fourcc = cv2.VideoWriter_fourcc(*'XVID')
-    out = cv2.VideoWriter('output.avi', fourcc, 20.0, (640,  480))
+    out = cv2.VideoWriter('tmp/output.avi', fourcc, 20.0, (640,  480))
     while True:
         # Capture frame-by-frame
         #success, frame = camera.read()  # read the camera frame
