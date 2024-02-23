@@ -28,6 +28,10 @@ def gen_frames():  # generate frame by frame from camera
 @app.route('/video_feed')
 def video_feed():
     return Response(gen_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
+@app.route('/')
+def index():
+    """Video streaming home page."""
+    return render_template('index.html')
 
 # Run the Flask app
 if __name__ == "__main__":
