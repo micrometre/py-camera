@@ -1,6 +1,5 @@
 # Import necessary modules
 from flask import Flask, render_template, Response, request, jsonify, redirect, url_for, send_file
-from aiortc import RTCPeerConnection, RTCSessionDescription
 import cv2
 
 # Create a Flask app instance
