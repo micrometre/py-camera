@@ -16,7 +16,7 @@ for (x,y,w,h) in faces:
     plate = gray[y: y+h, x:x+w]
     plate = cv2.blur(plate,ksize=(20,20))
     # put the blurred plate into the original image
-    gray[y: y+h, x:x+w] = plate
+    #gray[y: y+h, x:x+w] = plate
 
 cv2.imshow('plates',gray)
 if cv2.waitKey(0) & 0xFF == ord('q'):
