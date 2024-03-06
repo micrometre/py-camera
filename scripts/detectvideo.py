@@ -1,38 +1,36 @@
-import cv2
+import cv2 as cv
 import numpy as np
 
-carPlatesCascade = cv2.CascadeClassifier('haarcascades/haarcascade_russian_plate_number.xml')
+carPlatesCascade = cv.CascadeClassifier('haarcascades/haarcascade_russian_plate_number.xml')
 
-cap = cv2.VideoCapture('static/video.mp4')
-
-cap.set(cv2.CAP_PROP_FRAME_WIDTH, 320)
-cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 80)
+cap = cv.VideoCapture('static/video.mp4')
 
 
-if (cap.isOpened()==False):
-    print('Error Reading video')
 
-while True:
-    ret,frame = cap.read()
-    gray = cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)
-    car_plates = carPlatesCascade.detectMultiScale(gray,scaleFactor=1.2,
-    minNeighbors = 5, minSize=(25,25))
-
-    for (x,y,w,h) in car_plates:
-        cv2.rectangle(frame,(x,y),(x+w,y+h),(255,0,0),2)
-        plate = frame[y: y+h, x:x+w]
-        plate = cv2.blur(plate,ksize=(20,20))
-        # put the blurred plate into the original image
-        #frame[y: y+h, x:x+w,2] = plate
-
-    if ret == True:
-        cv2.imshow('Video',frame)
-    
-        if cv2.waitKey(0) & 0xFF == ord('q'):
+def gen_frames():  # generate frame by frame from camera
+    if not cap.isOpened():
+        print("Cannot open camera")
+        exit()
+    while True:
+        ret, frame = cap.read()
+        gray = cv.cvtColor(frame,cv.COLOR_BGR2GRAY)
+        car_plates = carPlatesCascade.detectMultiScale(gray,scaleFactor=1.2,
+        minNeighbors = 5, minSize=(25,25))
+        for (x,y,w,h) in car_plates:
+            cv.rectangle(frame,(x,y),(x+w,y+h),(255,1,0),2)
+            plate = frame[y: y+h, x:x+w]
+            plate = cv.blur(plate,ksize=(20,20))
+        if not ret:
+            print("Can't receive (stream end?). Exiting ...")
             break
-    
-    else:
-        break
+        gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
+        cv.imshow('frame', frame)
+        ret, buffer = cv.imencode('.jpg', frame)
+        frame = buffer.tobytes()
 
-cap.release()
-cv2.destroyAllWindows()
+        print(frame)
+        if cv.waitKey(1) == ord('q'):
+            break
+    cap.release()
+    cv.destroyAllWindows()
+gen_frames()   
