@@ -27,8 +27,7 @@ def gen_frames():  # generate frame by frame from camera
         cv.imshow('frame', frame)
         ret, buffer = cv.imencode('.jpg', frame)
         frame = buffer.tobytes()
-
-        print(frame)
+        print(b'--frame\r\n'b'\r\n\r\n' + frame + b'\r\n')  
         if cv.waitKey(1) == ord('q'):
             break
     cap.release()
