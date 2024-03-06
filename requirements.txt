@@ -1,3 +1,4 @@
 py-mon
 opencv-python
 flask
+matplotlib
